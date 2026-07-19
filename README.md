@@ -51,7 +51,7 @@ weekly-policy  … Briefer が毎朝の Daily Brief に方針を降ろす
 ## FAQ
 
 **Q. なぜ本体を公開しないのか**
-A. 生活オペレーション（健康・財務等の個人データ）が同居しているため。汎用化できる部品は [claude-code-templates](https://github.com/nokku-dev/claude-code-templates) として切り出しています。
+A. 生活オペレーション（健康・財務等の個人データ）が同居しているため。repo ローカルで完結する開発ループの部分は [dev-loop-kit](https://github.com/nokku-dev/dev-loop-kit) として公開しています。
 
 **Q. 何のために作ったのか**
 A. 認知コストの高い反復作業をシステムに吸収させ、人間は判断と創造に集中するため。同時に「AIエージェントを実運用で信頼可能にする設計とは何か」の実証実験でもあります。
