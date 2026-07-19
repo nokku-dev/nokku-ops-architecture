@@ -16,13 +16,13 @@
 | **Auditor** | 1週間の全ログを横断監査し、パターン・要注意事項・改善提案を Weekly Audit Report として生成 | 週次 |
 | **Briefer** | 当日のタスク・予定・週次方針を集約した Daily Brief を毎朝 Slack に配信 | 日次 |
 
-## 設計上の主要判断（ADR 50件以上で管理）
+## 設計上の主要判断（すべて ADR で管理）
 
 - **入力の摩擦をゼロに寄せる** — 投げ込む側に分類を要求しない。人は判断ゼロで capture するだけ（Slack `#brain-dump` / Obsidian inbox）で、domain / discipline / specialty / product の 4 軸分類・起票先 repo の解決・担当 agent の割当は Dispatcher が決定論的ルールで行う。capture（判断ゼロ）と clarify（判断あり）を時間的に分離することで、記録が続く
 - **判断コストの可視化（開発中）** — 認知コストのもう一方の山は「判断」。エージェントが停止した判断点とその理由を抽出・可視化し、人間が文脈を再構築せずに即断できる状態にすることを狙って **Tazna**（デスクトップツール / Tauri）を開発中
 - **情報境界の設計** — エージェントには生の認証情報や全データを渡さない。MCP サーバーを認可・スコープ制御のレイヤーとして挟み、事前にスコープ済みのデータだけが LLM に届く
 - **Inline evaluation** — 評価を後付けのオフライン工程にせず、Auditor / Reviewer をループ内（inline）に置いて品質検査を運用の一部にする
-- **人間の判断ポイントを明示的に設計** — 完全自動化を目指さない。週次の Audit Review・Planning は人間（私）が対話的に実施し、エージェントは材料の収集・提案までを担う（Augmentation not Transformation）
+- **人間の判断ポイントを明示的に設計** — 完全自動化を目指さない。週次の Audit Review・Planning は人間（私）が対話的に実施し、エージェントは材料の収集・提案までを担う（Augmentation not Transformation）。エージェントが判断を人間に戻す escalation は失敗ではなく、設計どおりの正常な出口として扱う
 - **PR outcome → corrections loop** — マージ可否を暗黙の正解信号にせず、レビューコメントを構造化して Executor の改善入力に還流させる
 - **AI レビューの限界を実測し、学習ループで補う** — 視覚的な違和感や意図ズレは静的レビューでは原理的に捕まらず、マージ後の実機確認でしか出ない。そこで発覚した差し戻しを issue から再発型（日付の off-by-one、SafeArea 衝突 等）として抽出し、pre-merge レビューに注入する checklist へ変換することで、同じ型を次回は事前に捕まえる。人間の実機確認は消さず、その学びだけを機械側に移す
 - **substrate の一元化** — タスク状態の SoT は GitHub Projects、知識・判断記録の SoT は Obsidian vault（region 分割 + inbox routing）。ツール移行の判断もすべて ADR で記録
@@ -40,13 +40,6 @@ weekly-policy  … Briefer が毎朝の Daily Brief に方針を降ろす
 ```
 
 月次指標 → 週次方針 → 日次 Brief という降下パイプラインで、長期計画と日々の実行が接続されています。
-
-## Numbers
-
-- 5 agents / launchd 常駐（24時間）
-- 2026-05-28 の稼働開始から約 7 週間で **545 runs**（完走 427 / 人間へ escalate 52 / 失敗 64）。escalation は失敗ではなく、設計どおりに人間へ判断を戻した回数
-- ADR 60 件 / agent manuals / kernel documents による設計・判断の永続化
-- TDD + PR 必須 + CI を人間・エージェント共通の規約として適用し、同期間に nokku-ops / knockon で計 433 PR を merge
 
 ## FAQ
 
